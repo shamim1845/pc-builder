@@ -14,23 +14,17 @@ import { usePathname } from "next/navigation";
 const navLinks = [
   {
     name: "Dashboard",
-    icon: (
-      <HomeIcon className="w-6 h-6 fill-gray-500 dark:fill-gray-300 group-hover:fill-teal-500" />
-    ),
+    icon: <HomeIcon className="w-6 h-6" />,
     link: "/",
   },
   {
     name: "New System",
-    icon: (
-      <ComputerDesktopIcon className="w-6 h-6 fill-gray-500 dark:fill-gray-300 group-hover:fill-teal-500" />
-    ),
+    icon: <ComputerDesktopIcon className="w-6 h-6 " />,
     link: "/new-system",
   },
   {
     name: "Saved Systems",
-    icon: (
-      <BookmarkSquareIcon className="w-6 h-6 fill-gray-500 dark:fill-gray-300 group-hover:fill-teal-500" />
-    ),
+    icon: <BookmarkSquareIcon className="w-6 h-6 " />,
     link: "/saved-systems",
   },
 ];
@@ -106,6 +100,17 @@ export default SideNav;
 const NavLinks = ({ expand }: { expand?: boolean }) => {
   const pathname = usePathname();
 
+  const active = (pathname: string, item: string): boolean => {
+    if (
+      (pathname === "/" && item.toLocaleLowerCase() === "dashboard") ||
+      pathname.slice(1) === item.toLocaleLowerCase().split(" ").join("-")
+    ) {
+      return true;
+    }
+
+    return false;
+  };
+
   return (
     <div className="">
       {navLinks.map((item) => (
@@ -115,14 +120,17 @@ const NavLinks = ({ expand }: { expand?: boolean }) => {
           className={`flex gap-2 ${
             expand ? "justify-start" : "justify-center"
           } ${
-            ((pathname === "/" &&
-              item.name.toLocaleLowerCase() === "dashboard") ||
-              pathname.slice(1) ===
-                item.name.toLocaleLowerCase().split(" ").join("-")) &&
-            "text-gray-900 dark:text-white"
+            active(pathname, item.name) &&
+            "text-gray-900 dark:text-white font-[500]"
           } items-center mb-3 hover:text-gray-900 dark:hover:text-white group`}
         >
-          <span>{item.icon}</span>
+          <span
+            className={`${
+              active(pathname, item.name) && "text-teal-500"
+            } group-hover:text-teal-500`}
+          >
+            {item.icon}
+          </span>
           {expand && <span>{item.name}</span>}
         </Link>
       ))}

@@ -68,13 +68,19 @@ const Component = ({
   return (
     <div
       onClick={() => setQueryString(component.name)}
-      className={`flex items-center gap-2 mb-2 cursor-pointer hover:text-gray-900 ${
+      className={`flex items-center gap-2 mb-2 cursor-pointer hover:text-gray-900 dark:hover:text-white ${
         queryString.toLocaleLowerCase() ===
-          component.name.toLocaleLowerCase() && "text-gray-900"
+          component.name.toLocaleLowerCase() &&
+        "text-gray-900 dark:text-white font-[500]"
       }`}
     >
       <span>
-        <PlusCircleIcon className="w-5 h-5" />
+        <PlusCircleIcon
+          className={`${
+            queryString.toLocaleLowerCase() ===
+              component.name.toLocaleLowerCase() && "stroke-teal-500"
+          } w-5 h-5`}
+        />
       </span>
       <span>{component.name}</span>
       {component.required && <span className="text-red-600">*</span>}
