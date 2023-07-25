@@ -3,43 +3,53 @@
 import Products from "@/components/newSystem/products/Products";
 import SideBar from "@/components/newSystem/sidebar/Sidebar";
 import { useState } from "react";
-
-const components = [
-  // Core Components
-  { id: 1, name: "CPU", required: true, coreComponents: true },
-  { id: 2, name: "CPU Cooler", required: false, coreComponents: true },
-  { id: 3, name: "Motherboard", required: true, coreComponents: true },
-  { id: 4, name: "RAM", required: true, coreComponents: true },
-  { id: 5, name: "Storage", required: true, coreComponents: true },
-  { id: 6, name: "Graphics Card", required: false, coreComponents: true },
-  { id: 7, name: "Power Supply", required: false, coreComponents: true },
-  { id: 8, name: "Casing", required: false, coreComponents: true },
-  //   PeriPherals & others
-  { id: 9, name: "Monitor", required: false, coreComponents: false },
-  { id: 10, name: "Casing Cooler", required: false, coreComponents: false },
-  { id: 11, name: "Keyboard", required: false, coreComponents: false },
-  { id: 12, name: "Mouse", required: false, coreComponents: false },
-  { id: 13, name: "Anti Virus", required: false, coreComponents: false },
-  { id: 14, name: "Headphone", required: false, coreComponents: false },
-  { id: 15, name: "UPS", required: false, coreComponents: false },
-];
+import { ArrowRightCircleIcon } from "@heroicons/react/24/outline";
 
 const NewPC = () => {
   const [queryString, setQueryString] = useState("cpu");
+  const [hide, setHide] = useState(true);
 
   return (
-    <div className="flex  new_system">
-      <div className="h-full overflow-y-auto pr-2">
-        <SideBar
-          queryString={queryString}
-          setQueryString={(str: string) => setQueryString(str)}
-          components={components}
-        />
+    <div className=" flex">
+      <div>
+        {/* SideBar */}
+        <div className={`h-screen fixed lg:relative left-0  z-10  `}>
+          <SideBar
+            queryString={queryString}
+            setQueryString={(str: string) => setQueryString(str)}
+            hide={hide}
+            setHide={(bool: boolean) => setHide(bool)}
+          />
+          <div
+            className={`absolute ${
+              hide ? "left-0" : "right-0"
+            } top-[40%] lg:hidden`}
+          >
+            {/* Arrow for show sideBar */}
+            {hide && (
+              <ArrowRightCircleIcon
+                onClick={() => setHide(false)}
+                className="w-6 h-6 cursor-pointer z-50"
+              />
+            )}
+          </div>
+        </div>
+
+        {/* Shadow */}
+        <div
+          onClick={() => setHide(true)}
+          className={`${
+            !hide &&
+            "w-screen lg:w-auto h-screen lg:h-auto absolute top-0 bottom-0 left-0 right-0 z-[1]   bg-[#00000059]"
+          }`}
+        ></div>
       </div>
+
+      {/* Product List */}
       <div
-        className={`h-full overflow-y-auto flex-1 border-l custom_border pl-2`}
+        className={`h-full lg:h-[93vh] overflow-y-auto overflow-x-hidden flex-1 lg:border-l custom_border px-2`}
       >
-        <Products queryString={queryString} />
+        <Products category={queryString} />
       </div>
     </div>
   );

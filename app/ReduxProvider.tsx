@@ -4,6 +4,8 @@ import { ReactNode } from "react";
 import { Provider } from "react-redux";
 
 const ReduxProvider = ({ children }: { children: ReactNode }) => {
+  console.log("reduxProvider render");
+
   return <Provider store={store}>{children}</Provider>;
 };
 

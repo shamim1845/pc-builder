@@ -1,27 +1,123 @@
+"use client";
+import ProductsLoading from "@/components/loading/ProductsLoading";
+import Product from "@/components/newSystem/products/Product";
+import { useGetProductsQuery } from "@/redux/features/api/products/productsAPI";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+
 export default function Home() {
+  const { data: newPC } = useSelector((state: RootState) => state.newPC);
+  const [showBtn, setShowBtn] = useState(false);
+
+  // => Effect for hide print pdf btn when user not select any item
+  useEffect(() => {
+    if (!newPC || newPC.length === 0) {
+      setShowBtn(false);
+    }
+  }, [newPC]);
+
+  // => Show this btn when user not select any component
+  if (!newPC || newPC.length === 0) {
+    return (
+      <div className="h-full  flex justify-center items-center">
+        <Link
+          href="/new-system"
+          className="flex flex-col items-center border-2 border-teal-500 px-5  py-2 rounded-lg bg-teal-500 hover:bg-teal-600 text-white"
+        >
+          Add component to build your custom PC
+        </Link>
+      </div>
+    );
+  }
+
   return (
-    <div className="bg-red-300">
-      <div className="sidebar">
-        <div className="flex gap-2">
-          <span>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="currentColor"
-              className="w-6 h-6"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
-            </svg>
-          </span>
-          <span className="text-teal-700 dark:text-purple-700">cpu</span>
+    <div className="relative h-full">
+      {/* Print PDF btn conditional rendering */}
+      {showBtn && (
+        <div className="fixed lg:absolute right-2 top-12 lg:right-5 lg:top-2">
+          <Link
+            href="/print_pc"
+            className="flex flex-col items-center border-2 border-teal-500 px-5  py-2 rounded-lg bg-teal-500 text-white"
+          >
+            Print PDF
+          </Link>
         </div>
+      )}
+
+      <div
+        className={`lg:h-[93vh] overflow-y-auto overflow-x-hidden grid md:grid-cols-2 gap-5 py-5 px-2`}
+      >
+        {newPC?.map((comp) => {
+          return (
+            <ChoosedComponent
+              key={comp.productID}
+              comp={comp}
+              setShowBtn={(bool) => setShowBtn(bool)}
+            />
+          );
+        })}
       </div>
     </div>
   );
 }
+
+// => Child component for user selected items
+const ChoosedComponent = ({
+  comp,
+  setShowBtn,
+}: {
+  comp: NewPCComponent;
+  setShowBtn: (bool: boolean) => void;
+}) => {
+  const { data, isLoading, error } = useGetProductsQuery({
+    queryKey: "_id",
+    queryValue: comp?.productID,
+  });
+
+  // => Effect for show print PDF btn when data fetch successfull
+  useEffect(() => {
+    if (data?.products?.length > 0) {
+      setShowBtn(true);
+    }
+  }, [data]);
+
+  // => handle loading, error and not-found state
+  if (isLoading) {
+    return (
+      <div className="my-5">
+        <ProductsLoading />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="h-[50%] flex justify-center items-center">
+        <h2 className="text-red-600">There was an error!</h2>
+      </div>
+    );
+  }
+
+  if (data?.products?.length === 0) {
+    return (
+      <div className="h-[50%] flex justify-center items-center">
+        <h2>No product found!</h2>
+      </div>
+    );
+  }
+
+  return (
+    <div className="mb-5">
+      {data?.products && (
+        <div className="capitalize text-lg text-gray-700 dark:text-white font-semibold mb-3">
+          {comp.component.split("-").join(" ")}
+        </div>
+      )}
+
+      {data?.products[0] && (
+        <Product product={data?.products[0]} currProduct={true} />
+      )}
+    </div>
+  );
+};

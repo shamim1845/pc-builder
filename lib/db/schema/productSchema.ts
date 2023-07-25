@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const ramSchema = new mongoose.Schema({
+const productSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
@@ -23,4 +23,5 @@ const ramSchema = new mongoose.Schema({
   },
 });
 
-export const Ram = mongoose.models["Ram"] || mongoose.model("Ram", ramSchema);
+export const Product =
+  mongoose.models["Ram"] || mongoose.model("Ram", productSchema);

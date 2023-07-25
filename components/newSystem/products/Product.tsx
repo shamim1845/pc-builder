@@ -1,10 +1,31 @@
+import { deleteNewPC, setNewPC } from "@/redux/features/pc/newPCSlice";
 import Image from "next/image";
-import React from "react";
+import { useDispatch } from "react-redux";
 
-const Product = ({ product }: any) => {
+const Product = ({
+  product,
+  currProduct,
+}: {
+  product: Product;
+  currProduct?: boolean;
+}) => {
+  const dispatch = useDispatch();
+
+  // => btn handler
+  const handleClick = () => {
+    if (currProduct) {
+      dispatch(deleteNewPC({ category: product.category }));
+    } else
+      dispatch(
+        setNewPC({ category: product.category, productID: product._id })
+      );
+  };
+
   return (
     <div className="border custom_border rounded-lg p-5 flex flex-col gap-5">
-      <h2>{product.name}</h2>
+      <h2 className="font-bold  text-gray-700 dark:text-white">
+        {product.name}
+      </h2>
       <div className="flex items-center justify-center">
         <Image
           priority
@@ -21,11 +42,16 @@ const Product = ({ product }: any) => {
         ))}
       </ul>
       <div className="flex justify-between">
-        <button className="bg-teal-500 hover:bg-teal-600 px-8 py-2 text-white rounded">
-          Add
+        <button
+          onClick={handleClick}
+          className="bg-teal-500 hover:bg-teal-600 px-8 py-2 text-white font-semibold rounded"
+        >
+          {currProduct ? "Delete" : "Add"}
         </button>
         <div>
-          <span className="text-gray-900 font-bold">{product.price}</span>
+          <span className="text-gray-900 dark:text-white font-bold">
+            {product.price}৳
+          </span>
         </div>
       </div>
     </div>

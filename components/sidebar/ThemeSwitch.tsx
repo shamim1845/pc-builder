@@ -16,7 +16,7 @@ const ThemeSwitch = () => {
 
   return (
     <select
-      className="absolute bottom-10  focus:outline-0"
+      className="absolute bottom-20  focus:outline-0"
       value={theme}
       onChange={(e) => setTheme(e.target.value)}
     >

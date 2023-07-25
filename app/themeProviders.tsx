@@ -4,5 +4,16 @@ import { ThemeProvider } from "next-themes";
 import { ReactNode } from "react";
 
 export function ThemeProviders({ children }: { children: ReactNode }) {
-  return <ThemeProvider attribute="class">{children}</ThemeProvider>;
+  console.log("themeProvider render");
+
+  return (
+    <ThemeProvider
+      attribute="class"
+      defaultTheme="system"
+      enableColorScheme
+      enableSystem
+    >
+      {children}
+    </ThemeProvider>
+  );
 }

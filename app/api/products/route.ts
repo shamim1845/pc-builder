@@ -1,18 +1,18 @@
 import { connectDb } from "@/lib/db/connectDB";
-import { Ram } from "@/lib/db/schema/ramSchema";
+import { Product } from "@/lib/db/schema/productSchema";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest, res: NextResponse) {
   const url = new URL(req.url);
-  const queryStr = url.searchParams.get("component");
-  console.log(queryStr);
+  const queryKey = url.searchParams.get("queryKey") || "";
+  const queryValue = url.searchParams.get("queryValue") || "";
 
   connectDb();
-  const response = await Ram.find({ category: queryStr });
+  const response = await Product.find({ [queryKey]: queryValue });
 
   return NextResponse.json({
     msg: "Success",
-    data: response,
+    products: response,
   });
 }
 
@@ -36,10 +36,16 @@ export async function POST(req: NextRequest, res: NextResponse) {
   }
 
   connectDb();
-  const response = await Ram.create({ name, image, price, features, category });
+  const response = await Product.create({
+    name,
+    image,
+    price,
+    features,
+    category,
+  });
 
   return NextResponse.json({
     msg: "Success",
-    data: response,
+    products: response,
   });
 }
