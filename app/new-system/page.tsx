@@ -9,6 +9,8 @@ const NewPC = () => {
   const [queryString, setQueryString] = useState("cpu");
   const [hide, setHide] = useState(true);
 
+  console.log("New system page render.");
+
   return (
     <div className=" flex">
       <div>

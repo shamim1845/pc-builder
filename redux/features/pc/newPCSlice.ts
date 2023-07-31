@@ -11,7 +11,10 @@ const newPCSlice = createSlice({
   reducers: {
     getNewPC: (state) => {
       const prevComponents = useGetLocalStorageData("my_pc");
-      state.data = prevComponents || [];
+
+      if (prevComponents?.length > 0) {
+        state.data = prevComponents;
+      }
     },
     setNewPC: (state, action) => {
       const prevComponents = useGetLocalStorageData("my_pc");

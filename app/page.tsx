@@ -3,22 +3,17 @@ import ProductsLoading from "@/components/loading/ProductsLoading";
 import Product from "@/components/newSystem/products/Product";
 import { useGetProductsQuery } from "@/redux/features/api/products/productsAPI";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import React from "react";
 import { useSelector } from "react-redux";
 
 export default function Home() {
   const { data: newPC } = useSelector((state: RootState) => state.newPC);
-  const [showBtn, setShowBtn] = useState(false);
 
-  // => Effect for hide print pdf btn when user not select any item
-  useEffect(() => {
-    if (!newPC || newPC.length === 0) {
-      setShowBtn(false);
-    }
-  }, [newPC]);
+  console.log("Home render", newPC);
 
   // => Show this btn when user not select any component
-  if (!newPC || newPC.length === 0) {
+
+  if (newPC.length === 0) {
     return (
       <div className="h-full  flex justify-center items-center">
         <Link
@@ -34,7 +29,7 @@ export default function Home() {
   return (
     <div className="relative h-full">
       {/* Print PDF btn conditional rendering */}
-      {showBtn && (
+      {newPC.length > 0 && (
         <div className="fixed lg:absolute right-2 top-12 lg:right-5 lg:top-2">
           <Link
             href="/print_pc"
@@ -49,13 +44,7 @@ export default function Home() {
         className={`lg:h-[93vh] overflow-y-auto overflow-x-hidden grid md:grid-cols-2 gap-5 py-5 px-2`}
       >
         {newPC?.map((comp) => {
-          return (
-            <ChoosedComponent
-              key={comp.productID}
-              comp={comp}
-              setShowBtn={(bool) => setShowBtn(bool)}
-            />
-          );
+          return <ChoosedComponent key={comp.productID} comp={comp} />;
         })}
       </div>
     </div>
@@ -63,24 +52,13 @@ export default function Home() {
 }
 
 // => Child component for user selected items
-const ChoosedComponent = ({
-  comp,
-  setShowBtn,
-}: {
-  comp: NewPCComponent;
-  setShowBtn: (bool: boolean) => void;
-}) => {
+const ChoosedComponent = ({ comp }: { comp: NewPCComponent }) => {
   const { data, isLoading, error } = useGetProductsQuery({
     queryKey: "_id",
-    queryValue: comp?.productID,
+    queryValue: comp.productID,
   });
 
-  // => Effect for show print PDF btn when data fetch successfull
-  useEffect(() => {
-    if (data?.products?.length > 0) {
-      setShowBtn(true);
-    }
-  }, [data]);
+  console.log("Choosed component render", data);
 
   // => handle loading, error and not-found state
   if (isLoading) {
@@ -93,7 +71,7 @@ const ChoosedComponent = ({
 
   if (error) {
     return (
-      <div className="h-[50%] flex justify-center items-center">
+      <div className="h-[50vh] w-full  flex justify-center items-center">
         <h2 className="text-red-600">There was an error!</h2>
       </div>
     );
@@ -101,7 +79,7 @@ const ChoosedComponent = ({
 
   if (data?.products?.length === 0) {
     return (
-      <div className="h-[50%] flex justify-center items-center">
+      <div className="h-[50vh] w-full flex justify-center items-center">
         <h2>No product found!</h2>
       </div>
     );

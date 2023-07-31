@@ -11,6 +11,8 @@ const Product = ({
 }) => {
   const dispatch = useDispatch();
 
+  console.log("Product render");
+
   // => btn handler
   const handleClick = () => {
     if (currProduct) {

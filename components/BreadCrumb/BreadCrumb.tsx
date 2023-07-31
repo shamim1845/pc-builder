@@ -3,6 +3,7 @@
 import { usePathname } from "next/navigation";
 // Hero Icons
 import { HomeIcon } from "@heroicons/react/24/solid";
+import React from "react";
 
 const BreadCrumb = () => {
   const pathname = usePathname();
@@ -24,3 +25,5 @@ const BreadCrumb = () => {
 };
 
 export default BreadCrumb;
+
+export const MemoizedBreadCrumb = React.memo(BreadCrumb);

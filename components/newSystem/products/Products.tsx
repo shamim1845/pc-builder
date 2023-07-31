@@ -13,7 +13,7 @@ const Products = ({ category }: { category: string }) => {
 
   const { data: newPC } = useSelector((state: RootState) => state.newPC);
 
-  console.log("Products render");
+  console.log(`Products render newPC:`, newPC);
 
   // => Effect for set set queryKey, queryValue and skip
   useEffect(() => {
@@ -29,7 +29,9 @@ const Products = ({ category }: { category: string }) => {
 
     setQueryKey("category");
     setQueryValue(category);
-    setSkip(false);
+    if (skip) {
+      setSkip(false);
+    }
   }, [category, newPC]);
 
   const { data, error, isLoading } = useGetProductsQuery(

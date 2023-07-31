@@ -1,8 +1,10 @@
 "use client";
 
+import { setSideBar } from "@/redux/features/sidebar/sideBarSlice";
 // Hero Icons
 import { PlusCircleIcon, CheckCircleIcon } from "@heroicons/react/24/outline";
-import { useSelector } from "react-redux";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 const SideBar = ({
   queryString,
@@ -16,6 +18,16 @@ const SideBar = ({
   setHide: (bool: boolean) => void;
 }) => {
   const { data: sideBar } = useSelector((state: RootState) => state.sideBar);
+  const { data: newPC } = useSelector((state: RootState) => state.newPC);
+
+  const dispatch = useDispatch();
+
+  // => Update sideBar(selected status) When new component added or removed
+  useEffect(() => {
+    dispatch(setSideBar());
+  }, [newPC]);
+
+  console.log(`sidebar render newPC: ${newPC} sideBar: ${sideBar}`);
 
   return (
     <div
@@ -44,10 +56,7 @@ const SideBar = ({
       {/* Peripherals & Others */}
       <div className="pt-2">
         <div className=" py-2">
-          <h4 className="bg-teal-500  text-white px-2">
-            {" "}
-            Peripherals & Others
-          </h4>
+          <h4 className="bg-teal-500  text-white px-2">Peripherals & Others</h4>
         </div>
         {sideBar
           ?.filter((comp) => !comp.coreComponents)
@@ -77,10 +86,14 @@ const Component = ({
   component: SideBar;
 }) => {
   const category = component.name.toLocaleLowerCase().split(" ").join("-");
+
   const handleClick = () => {
     setQueryString(category);
     setHide(true);
   };
+
+  console.log("Sidebar component render");
+
   return (
     <div
       onClick={handleClick}

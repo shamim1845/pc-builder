@@ -2,16 +2,13 @@
 
 import SideNav from "@/components/sidebar/SideNav";
 import { ReactNode, useEffect, useState } from "react";
-import BreadCrumb from "@/components/BreadCrumb/BreadCrumb";
+import { MemoizedBreadCrumb } from "@/components/BreadCrumb/BreadCrumb";
 import { Bars3Icon } from "@heroicons/react/24/solid";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { getNewPC } from "@/redux/features/pc/newPCSlice";
-import { setSideBar } from "@/redux/features/sidebar/sideBarSlice";
 
 const PageLayout = ({ children }: { children: ReactNode }) => {
   const [hide, setHide] = useState(true);
-  const { data: newPC } = useSelector((state: RootState) => state.newPC);
-
   const dispatch = useDispatch();
 
   console.log("pageLayout render");
@@ -20,11 +17,6 @@ const PageLayout = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     dispatch(getNewPC());
   }, []);
-
-  // => Update sideBar(selected status) When new component added or removed
-  useEffect(() => {
-    dispatch(setSideBar());
-  }, [newPC]);
 
   return (
     <main className="flex">
@@ -52,7 +44,7 @@ const PageLayout = ({ children }: { children: ReactNode }) => {
             />
           </div>
 
-          <BreadCrumb />
+          <MemoizedBreadCrumb />
         </div>
         {/* Main content */}
         <div className="pt-10 lg:p-0 h-screen">{children}</div>

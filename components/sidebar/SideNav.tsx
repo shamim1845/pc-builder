@@ -9,6 +9,7 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import React from "react";
 
 const navLinks = [
   {
@@ -32,7 +33,7 @@ const SideNav = ({
   hide,
   setHide,
 }: {
-  hide: boolean;
+  hide?: boolean;
   setHide: (val: boolean) => void;
 }) => {
   console.log("sideNav render");
@@ -98,8 +99,11 @@ const SideNav = ({
 
 export default SideNav;
 
+// => Child component
 const NavLinks = ({ expand }: { expand?: boolean }) => {
   const pathname = usePathname();
+
+  console.log("Navlinks render");
 
   const active = (pathname: string, item: string): boolean => {
     if (
@@ -138,3 +142,5 @@ const NavLinks = ({ expand }: { expand?: boolean }) => {
     </div>
   );
 };
+
+const MemoNavLinks = React.memo(NavLinks);
