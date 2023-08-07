@@ -1,9 +1,7 @@
 import React from "react";
 
-const SavedSystems = () => {
-  console.log("Main page render");
-
-  return <div>SavedSystems</div>;
+const SavedSystem = () => {
+  return <div>SavedSystem</div>;
 };
 
-export default SavedSystems;
+export default SavedSystem;

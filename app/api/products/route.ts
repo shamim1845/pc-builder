@@ -1,3 +1,4 @@
+import { uploadImage } from "@/lib/cloudinary/upload";
 import { connectDb } from "@/lib/db/connectDB";
 import { Product } from "@/lib/db/schema/productSchema";
 import { NextRequest, NextResponse } from "next/server";
@@ -8,7 +9,18 @@ export async function GET(req: NextRequest, res: NextResponse) {
   const queryValue = url.searchParams.get("queryValue") || "";
 
   connectDb();
-  const response = await Product.find({ [queryKey]: queryValue });
+
+  let response;
+  if (queryKey === "_id") {
+    response = await Product.findById({ [queryKey]: queryValue });
+
+    return NextResponse.json({
+      msg: "Success",
+      product: response,
+    });
+  }
+
+  response = await Product.find({ [queryKey]: queryValue });
 
   return NextResponse.json({
     msg: "Success",
@@ -16,7 +28,8 @@ export async function GET(req: NextRequest, res: NextResponse) {
   });
 }
 
-export async function POST(req: NextRequest, res: NextResponse) {
+// => Create product
+export async function POST(req: NextRequest) {
   const { name, image, price, features, category } = await req.json();
 
   if (
@@ -36,16 +49,27 @@ export async function POST(req: NextRequest, res: NextResponse) {
   }
 
   connectDb();
-  const response = await Product.create({
-    name,
-    image,
-    price,
-    features,
-    category,
-  });
 
-  return NextResponse.json({
-    msg: "Success",
-    products: response,
-  });
+  const result: any = await uploadImage(image);
+  console.log("Upload result: => ", result);
+
+  if (!result) {
+    return NextResponse.json({
+      msg: "failed",
+      products: "Product create failed.",
+    });
+  }
+
+  // const response = await Product.create({
+  //   name,
+  //   image: result?.public_id,
+  //   price,
+  //   features,
+  //   category,
+  // });
+
+  // return NextResponse.json({
+  //   msg: "Success",
+  //   products: response,
+  // });
 }

@@ -1,5 +1,7 @@
 import useGetLocalStorageData from "@/lib/customHooks/useGetLocalStorageData";
+import { store } from "@/redux/store";
 import { createSlice } from "@reduxjs/toolkit";
+import { setSideBar } from "../sidebar/sideBarSlice";
 
 const initialState: { data: NewPCComponent[] } = {
   data: [],

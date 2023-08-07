@@ -1,12 +1,11 @@
 "use client";
 
-import Products from "@/components/newSystem/products/Products";
+import { MemoProducts } from "@/components/newSystem/products/Products";
 import SideBar from "@/components/newSystem/sidebar/Sidebar";
 import { useState } from "react";
 import { ArrowRightCircleIcon } from "@heroicons/react/24/outline";
 
 const NewPC = () => {
-  const [queryString, setQueryString] = useState("cpu");
   const [hide, setHide] = useState(true);
 
   console.log("New system page render.");
@@ -16,12 +15,7 @@ const NewPC = () => {
       <div>
         {/* SideBar */}
         <div className={`h-screen fixed lg:relative left-0  z-10  `}>
-          <SideBar
-            queryString={queryString}
-            setQueryString={(str: string) => setQueryString(str)}
-            hide={hide}
-            setHide={(bool: boolean) => setHide(bool)}
-          />
+          <SideBar hide={hide} setHide={(bool: boolean) => setHide(bool)} />
           <div
             className={`absolute ${
               hide ? "left-0" : "right-0"
@@ -49,9 +43,9 @@ const NewPC = () => {
 
       {/* Product List */}
       <div
-        className={`h-full lg:h-[93vh] overflow-y-auto overflow-x-hidden flex-1 lg:border-l custom_border px-2`}
+        className={`h-full lg:h-[93vh] overflow-y-auto overflow-x-hidden flex-1 px-2  lg:px-5  lg:border-x custom_border`}
       >
-        <Products category={queryString} />
+        <MemoProducts />
       </div>
     </div>
   );

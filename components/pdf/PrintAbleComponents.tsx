@@ -2,12 +2,39 @@
 import Image from "next/image";
 import React, { useState, forwardRef, useEffect } from "react";
 import { sidebarConstant } from "@/lib/constant";
-import { useGetProductsQuery } from "@/redux/features/api/products/productsAPI";
 import { useSelector } from "react-redux";
+import axios from "axios";
+import { currencyFormat } from "@/lib/utils/helpers/currencyFormat";
+import { collectData } from "@/lib/utils/fetcher/collectData";
 
 const PrintAbleComponents = forwardRef<HTMLDivElement>((props, ref) => {
   const [total, setTotal] = useState(0);
   const [dateTime, setDateTime] = useState("");
+  const [components, setComponents] = useState<Product[]>([]);
+
+  const { data: newPC } = useSelector((state: RootState) => state.newPC);
+
+  const selectedProducts = async () => {
+    const products = await collectData(newPC);
+
+    if (products.length > 0) {
+      setComponents(products);
+
+      // calculate total products price
+      let total = products.reduce((acc, currProduct) => {
+        return acc + Number(currProduct.price);
+      }, 0);
+
+      setTotal(total);
+    }
+  };
+
+  // => Effect for Fetch Data
+  useEffect(() => {
+    if (newPC.length > 0) {
+      selectedProducts();
+    }
+  }, [newPC]);
 
   // => Effect for Format date and time in client side
   useEffect(() => {
@@ -15,6 +42,7 @@ const PrintAbleComponents = forwardRef<HTMLDivElement>((props, ref) => {
     const dt = `${date.toLocaleDateString()}, ${date.toLocaleTimeString()}`;
     setDateTime(dt);
   }, []);
+
   console.log("parent render");
 
   return (
@@ -33,7 +61,7 @@ const PrintAbleComponents = forwardRef<HTMLDivElement>((props, ref) => {
               priority
             />
             <div>
-              <h1 className="text-xl text-teal-500 font-semibold border-b-2 border-teal-500">
+              <h1 className="text-2xl text-teal-500 font-bold border-b-2 border-teal-500">
                 PC Craft Ltd
               </h1>
               <div className="">
@@ -49,27 +77,23 @@ const PrintAbleComponents = forwardRef<HTMLDivElement>((props, ref) => {
           <table className="w-full ">
             <thead className="bg-teal-500">
               <tr className="">
-                <td className="border border-gray-500 p-2">Component</td>
-                <td className="border border-gray-500 p-2">Product Name</td>
-                <td className="border border-gray-500 p-2">Price</td>
+                <td className="border custom_border p-2">Component</td>
+                <td className="border custom_border p-2">Product Name</td>
+                <td className="border custom_border p-2">Price</td>
               </tr>
             </thead>
             <tbody className="">
               {sidebarConstant?.map((comp: SideBar) => {
                 return (
-                  <TableRow
-                    key={comp.id}
-                    comp={comp}
-                    setTotal={(price: number) =>
-                      setTotal((prev) => prev + price)
-                    }
-                  />
+                  <TableRow key={comp.id} comp={comp} components={components} />
                 );
               })}
-              <tr className="border border-gray-500 p-2">
+              <tr className="border custom_border p-2">
                 <td></td>
                 <td className="text-right pr-2">Total:</td>
-                <td className="border border-gray-500 p-2">{total}</td>
+                <td className="border custom_border p-2">
+                  {currencyFormat(total)}
+                </td>
               </tr>
             </tbody>
           </table>
@@ -80,60 +104,27 @@ const PrintAbleComponents = forwardRef<HTMLDivElement>((props, ref) => {
 });
 export default PrintAbleComponents;
 
+// => Child component
 const TableRow = ({
   comp,
-  setTotal,
+  components,
 }: {
   comp: SideBar;
-  setTotal: (price: number) => void;
+  components: Product[];
 }) => {
-  const { data: newPC } = useSelector((state: RootState) => state.newPC);
-  const [queryValue, setQueryValue] = useState("");
-  const [skip, setSkip] = useState(true);
-
-  // => Effect for find current component selected or not if selected set it on local state
-  useEffect(() => {
-    const currProduct = newPC?.find(
-      (item) =>
-        item.component === comp.name.toLocaleLowerCase().split(" ").join("-")
-    );
-    if (currProduct) {
-      setQueryValue(currProduct?.productID || "");
-      setSkip(false);
-    }
-    console.log(`currProduct: (${comp.name}) => `, currProduct);
-  }, [newPC]);
-
-  // => fetch data for current product
-  const { data } = useGetProductsQuery(
-    {
-      queryKey: "_id",
-      queryValue,
-    },
-    {
-      skip,
-      refetchOnMountOrArgChange: true,
-    }
-  );
-
-  useEffect(() => {
-    if (data?.products[0].price) {
-      setTotal(data?.products[0].price);
-    }
-    console.log(`data: (${comp.name}) => `, data);
-  }, [data]);
-
   console.log("child render");
 
+  const product = components.find((product) => {
+    let componentName = comp.name.toLowerCase().split(" ").join("-");
+    return product.category === componentName;
+  });
+
   return (
-    <tr key={comp.id} className="border border-gray-500 p-2 ">
-      <td className="border border-gray-500 p-2 w-[7rem] ">{comp.name}</td>
-      <td className="border border-gray-500 p-2 flex-1">
-        {data?.products[0].name}
-      </td>
-      <td className="border border-gray-500 p-2 w-[5rem] ">
-        {data?.products[0].price}
-        {data?.products[0].price && "৳"}
+    <tr key={comp.id} className="border custom_border p-2 ">
+      <td className="border custom_border p-2 w-[7rem] ">{comp.name}</td>
+      <td className="border custom_border p-2 flex-1">{product?.name}</td>
+      <td className="border custom_border p-2 w-[5rem] ">
+        {product && currencyFormat(product?.price)}
       </td>
     </tr>
   );

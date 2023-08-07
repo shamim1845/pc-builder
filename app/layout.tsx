@@ -1,14 +1,14 @@
 import "./globals.css";
 import type { Metadata } from "next";
-import { Ubuntu } from "next/font/google";
+import { Inter } from "next/font/google";
 import { ThemeProviders } from "./themeProviders";
 import PageLayout from "./pageLayout";
 import ReduxProvider from "./ReduxProvider";
 
-const ubuntu = Ubuntu({
+const inter = Inter({
   subsets: ["latin"],
-  weight: ["300", "400", "500", "700"],
-  style: ["italic"],
+  weight: ["400", "500", "600", "700", "900"],
+  preload: true,
 });
 
 export const metadata: Metadata = {
@@ -16,7 +16,7 @@ export const metadata: Metadata = {
   description: "Build Your Custom PC.",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
@@ -25,7 +25,7 @@ export default function RootLayout({
 
   return (
     <html lang="en">
-      <body className={ubuntu.className}>
+      <body className={inter.className}>
         <ThemeProviders>
           <ReduxProvider>
             <PageLayout>{children}</PageLayout>

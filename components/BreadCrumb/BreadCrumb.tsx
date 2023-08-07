@@ -11,14 +11,12 @@ const BreadCrumb = () => {
 
   return (
     <div className="w-full h-full lg:py-5 lg:border-b custom_border flex items-center">
-      <div className="w-full !h-full flex items-center gap-2 text-gray-500 ">
+      <div className="w-full !h-full flex items-center gap-2 lg:!text-gray-500  lg:dark:!text-gray-400">
         <span>
           <HomeIcon className="w-4 h-4 fill-gray-600 dark:fill-gray-300" />
         </span>
-        <span className={`${pathname === "/" && "invisible"}`}>/</span>
-        <span className=" text-gray-900 dark:text-white">
-          {pathname.slice(1)}
-        </span>
+        <span className="">/</span>
+        <span className="">{pathname.slice(1)}</span>
       </div>
     </div>
   );

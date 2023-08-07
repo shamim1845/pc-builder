@@ -36,7 +36,7 @@ const PageLayout = ({ children }: { children: ReactNode }) => {
       {/*Right side content */}
       <div className="flex-1 gap-2 lg:pl-5 ">
         {/* BreadCrumb */}
-        <div className="fixed lg:relative  w-full  flex items-center gap-5 px-2 lg:px-0 py-2 lg:py-0  bg-teal-500 dark:bg-gray-900 lg:bg-transparent dark:lg:bg-transparent z-10">
+        <div className="fixed lg:relative  w-full  flex items-center gap-5 px-2 lg:px-0 py-2 lg:py-0  bg-teal-500 dark:bg-gray-800 lg:bg-transparent dark:lg:bg-transparent z-10 custom_box_shadow">
           <div className={`lg:hidden `}>
             <Bars3Icon
               onClick={() => setHide(false)}

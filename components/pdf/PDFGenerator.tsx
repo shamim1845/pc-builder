@@ -7,6 +7,8 @@ import { PrinterIcon } from "@heroicons/react/24/outline";
 const PDFGenerator = () => {
   const componentRef = useRef(null);
 
+  console.log("PDF generator rander");
+
   const handlePrint = useReactToPrint({
     content: () => componentRef.current,
   });
@@ -25,7 +27,9 @@ const PDFGenerator = () => {
       </div>
 
       {/* PrintAble Component */}
-      <PrintAbleComponents ref={componentRef} />
+      <div className="mt-5">
+        <PrintAbleComponents ref={componentRef} />
+      </div>
     </div>
   );
 };

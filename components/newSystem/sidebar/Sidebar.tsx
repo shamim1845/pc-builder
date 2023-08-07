@@ -1,43 +1,31 @@
 "use client";
 
-import { setSideBar } from "@/redux/features/sidebar/sideBarSlice";
+import { setCurrentCategory } from "@/redux/features/extra/extraSlice";
 // Hero Icons
 import { PlusCircleIcon, CheckCircleIcon } from "@heroicons/react/24/outline";
-import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 const SideBar = ({
-  queryString,
-  setQueryString,
   hide,
   setHide,
 }: {
-  queryString: string;
-  setQueryString: (str: string) => void;
   hide: boolean;
   setHide: (bool: boolean) => void;
 }) => {
   const { data: sideBar } = useSelector((state: RootState) => state.sideBar);
-  const { data: newPC } = useSelector((state: RootState) => state.newPC);
+  const { currentCategory } = useSelector((state: RootState) => state.extra);
 
-  const dispatch = useDispatch();
-
-  // => Update sideBar(selected status) When new component added or removed
-  useEffect(() => {
-    dispatch(setSideBar());
-  }, [newPC]);
-
-  console.log(`sidebar render newPC: ${newPC} sideBar: ${sideBar}`);
+  console.log("sideBar render");
 
   return (
     <div
-      className={` h-full  bg-gray-100 dark:bg-gray-700 px-5 lg:pl-0  fixed lg:relative  transition-all delay-75 ${
+      className={`bg-white dark:bg-gray-700 lg:bg-transparent dark:lg:bg-transparent  h-full px-5 py-5 lg:pl-0  fixed lg:relative  transition-all delay-75 ${
         hide ? "-left-[15rem] lg:left-0" : "left-0"
-      }`}
+      } `}
     >
       {/* Core Components */}
-      <div>
-        <div className=" py-2">
+      <div className="mb-5">
+        <div className="mb-2">
           <h4 className="bg-teal-500  text-white px-2">Core Components</h4>
         </div>
         {sideBar
@@ -45,8 +33,7 @@ const SideBar = ({
           ?.map((component) => (
             <Component
               key={component.id}
-              queryString={queryString}
-              setQueryString={(str: string) => setQueryString(str)}
+              currentCategory={currentCategory}
               setHide={(bool: boolean) => setHide(bool)}
               component={component}
             />
@@ -54,8 +41,8 @@ const SideBar = ({
       </div>
 
       {/* Peripherals & Others */}
-      <div className="pt-2">
-        <div className=" py-2">
+      <div className="mb-5">
+        <div className=" mb-2">
           <h4 className="bg-teal-500  text-white px-2">Peripherals & Others</h4>
         </div>
         {sideBar
@@ -63,8 +50,7 @@ const SideBar = ({
           ?.map((component) => (
             <Component
               key={component.id}
-              queryString={queryString}
-              setQueryString={(str: string) => setQueryString(str)}
+              currentCategory={currentCategory}
               setHide={(bool: boolean) => setHide(bool)}
               component={component}
             />
@@ -75,20 +61,18 @@ const SideBar = ({
 };
 
 const Component = ({
-  queryString,
-  setQueryString,
+  currentCategory,
   setHide,
   component,
 }: {
-  queryString: string;
-  setQueryString: (str: string) => void;
+  currentCategory: string;
   setHide: (bool: boolean) => void;
   component: SideBar;
 }) => {
   const category = component.name.toLocaleLowerCase().split(" ").join("-");
-
+  const dispatch = useDispatch();
   const handleClick = () => {
-    setQueryString(category);
+    dispatch(setCurrentCategory(category));
     setHide(true);
   };
 
@@ -98,7 +82,8 @@ const Component = ({
     <div
       onClick={handleClick}
       className={`flex items-center gap-2 mb-2 cursor-pointer hover:text-gray-900 dark:hover:text-white  ${
-        queryString === category && "text-gray-900 dark:text-white font-[500]"
+        currentCategory === category &&
+        "text-gray-900 dark:text-white font-[500]"
       }`}
     >
       <span>
@@ -107,7 +92,7 @@ const Component = ({
         ) : (
           <PlusCircleIcon
             className={`${
-              queryString === category && "stroke-teal-500"
+              currentCategory === category && "stroke-teal-500"
             } w-5 h-5`}
           />
         )}

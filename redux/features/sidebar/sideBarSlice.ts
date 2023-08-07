@@ -5,6 +5,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState: { data: SideBar[] } = {
   data: sidebarConstant,
 };
+
 const sideBarSlice = createSlice({
   name: "sideBar",
   initialState,

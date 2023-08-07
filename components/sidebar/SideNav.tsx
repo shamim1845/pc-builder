@@ -14,17 +14,17 @@ import React from "react";
 const navLinks = [
   {
     name: "Dashboard",
-    icon: <HomeIcon className="w-6 h-6" />,
+    icon: <HomeIcon className="w-5 h-5" />,
     link: "/",
   },
   {
     name: "New System",
-    icon: <ComputerDesktopIcon className="w-6 h-6 " />,
+    icon: <ComputerDesktopIcon className="w-5 h-5" />,
     link: "/new-system",
   },
   {
     name: "Saved Systems",
-    icon: <BookmarkSquareIcon className="w-6 h-6 " />,
+    icon: <BookmarkSquareIcon className="w-5 h-5" />,
     link: "/saved-systems",
   },
 ];
@@ -40,7 +40,7 @@ const SideNav = ({
 
   return (
     <div
-      className={`h-screen min-w-[11rem]  fixed lg:relative bg-gray-100 dark:bg-gray-700 lg:bg-transparent dark:lg:bg-transparent px-5 lg:border-r custom_border z-50 transition-all delay-75 ${
+      className={`h-screen min-w-[5rem]  fixed lg:relative !bg-[#fff] dark:!bg-gray-700 lg:bg-transparent dark:lg:bg-transparent px-5 lg:custom_box_shadow z-50 transition-all delay-75 ${
         hide ? "-left-[15rem] lg:left-0" : "left-0"
       }`}
     >
@@ -63,7 +63,7 @@ const SideNav = ({
               viewBox="0 0 24 24"
               strokeWidth={1.5}
               stroke="currentColor"
-              className="w-6 h-6 cursor-pointer"
+              className="w-5 h-5 cursor-pointer"
             >
               <path
                 strokeLinecap="round"
@@ -79,7 +79,7 @@ const SideNav = ({
               viewBox="0 0 24 24"
               strokeWidth={1.5}
               stroke="currentColor"
-              className="w-6 h-6 cursor-pointer"
+              className="w-5 h-5 cursor-pointer"
             >
               <path
                 strokeLinecap="round"
@@ -117,12 +117,12 @@ const NavLinks = ({ expand }: { expand?: boolean }) => {
   };
 
   return (
-    <div className="mt-10">
+    <div className="mt-20">
       {navLinks.map((item) => (
         <Link
           key={item.name}
           href={item.link}
-          className={`flex gap-2 ${
+          className={`flex gap-2 mt-4 ${
             expand ? "justify-start" : "justify-center"
           } ${
             active(pathname, item.name) &&
@@ -142,5 +142,3 @@ const NavLinks = ({ expand }: { expand?: boolean }) => {
     </div>
   );
 };
-
-const MemoNavLinks = React.memo(NavLinks);

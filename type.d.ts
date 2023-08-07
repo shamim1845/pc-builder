@@ -17,6 +17,14 @@ type RootState = {
     data: NewPCComponent[];
   };
   sideBar: { data: SideBar[] };
+  extra: {
+    currentCategory: string;
+    query: {
+      queryKey: string;
+      queryValue: string;
+      skip: boolean;
+    };
+  };
 };
 
 type Product = {

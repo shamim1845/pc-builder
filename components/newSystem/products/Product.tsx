@@ -1,5 +1,6 @@
+import Button from "@/components/ui/Button";
 import { deleteNewPC, setNewPC } from "@/redux/features/pc/newPCSlice";
-import Image from "next/image";
+import { CldImage } from "next-cloudinary";
 import { useDispatch } from "react-redux";
 
 const Product = ({
@@ -24,32 +25,31 @@ const Product = ({
   };
 
   return (
-    <div className="border custom_border rounded-lg p-5 flex flex-col gap-5">
+    <div className="bg-white dark:bg-gray-700  custom_box_shadow rounded-lg p-5 flex flex-col gap-5">
       <h2 className="font-bold  text-gray-700 dark:text-white">
         {product.name}
       </h2>
-      <div className="flex items-center justify-center">
-        <Image
-          priority
-          className="w-[10rem]"
-          src={product.image || ""}
-          width={100}
-          height={100}
+      <div className="flex items-center justify-center my-2">
+        <CldImage
+          width={160}
+          height={160}
+          src={product.image}
+          sizes="100vw"
           alt={product.name}
         />
       </div>
       <ul className="list-disc list-inside">
         {product.features.map((feature: string) => (
-          <li key={feature}>{feature}</li>
+          <li className="mb-1" key={feature}>
+            {feature}
+          </li>
         ))}
       </ul>
       <div className="flex justify-between">
-        <button
-          onClick={handleClick}
-          className="bg-teal-500 hover:bg-teal-600 px-8 py-2 text-white font-semibold rounded"
-        >
+        <Button handleClick={handleClick}>
           {currProduct ? "Delete" : "Add"}
-        </button>
+        </Button>
+
         <div>
           <span className="text-gray-900 dark:text-white font-bold">
             {product.price}৳
